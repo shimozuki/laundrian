@@ -137,7 +137,7 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
-            return redirect()->back();
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
 }

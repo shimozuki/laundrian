@@ -28,19 +28,6 @@
             <div class="card card-body rounded-0 border p-4 h-100">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h5 class="mb-0">{{ $employees->count() }}</h5>
-                        <span class="h6 fw-normal mb-0">TOTAL KARYAWAN</span>
-                    </div>
-                    <div class="icon-lg rounded-0 bg-dark text-white mb-0">
-                        <i class="fa-sharp fa-solid fa-users"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card card-body rounded-0 border p-4 h-100">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
                         <h5 class="mb-0">{{ $customers->count() }}</h5>
                         <span class="h6 fw-normal mb-0">TOTAL PELANGGAN</span>
                     </div>

@@ -67,13 +67,19 @@ class LoginController extends Controller
         return redirect()->back();
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+        // Redirect to the intended URL or default to '/dashboard'
+        return redirect()->intended('/admin/dashboard');
+    }
+
     /**  
      * Show the application's login form.  
      *  
      * @return \Illuminate\Http\Response  
-     */  
-    public function showLoginForm()  
-    {  
-        return view('laundry.auth.pages.login.index');  
-    }  
+     */
+    public function showLoginForm()
+    {
+        return view('laundry.auth.pages.login.index');
+    }
 }

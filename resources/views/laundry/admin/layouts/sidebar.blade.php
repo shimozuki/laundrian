@@ -21,6 +21,7 @@
                 <li class="nav-item"> <a href="{{ route('admin.coupon') }}" class="nav-link @yield('active-data-coupon')">KUPON</a> </li>
                 <li class="nav-item fw-normal small ms-2 my-2"> LAINNYA </li>
                 <li class="nav-item"> <a href="{{ route('admin.review') }}" class="nav-link @yield('active-other-review')">ULASAN</a> </li>
+                <li class="nav-item"> <a href="{{ route('chatify') }}" class="nav-link @yield('active-other-review')">PESAN</a> </li>
             </ul>
         </div>
     </div>

@@ -30,13 +30,20 @@ use App\Http\Controllers\Laundry\Customer\CouponController as CustomerCouponCont
 use App\Http\Controllers\Laundry\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Laundry\Customer\TransactionController as CustomerTransactionController;
 use App\Http\Controllers\Laundry\Customer\DashboardController as CustomerDashboardController;
-use App\Http\Controllers\Auth\LoginController; 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Laundry\Auth\RegisterController;
 
 /* ROUTE */
 
 Auth::routes();
 Route::post('/processLogin', [LoginController::class, 'login'])->name('processLogin'); 
-Route::post('/processLogout', [LoginController::class, 'logout'])->name('processLogout');  
+Route::post('/processLogout', [LoginController::class, 'logout'])->name('processLogout');
+Route::post('/prosesregister', [AdminCustomerController::class, 'daftar'])->name('customerCreate');
+Route::post('/register', [RegisterController::class, 'showForm']);
+
+Route::get('/', function () {
+    return view('index');
+});
 Route::middleware(['auth'])->group(function () {
     Route::get('/roles', RoleController::class);
 

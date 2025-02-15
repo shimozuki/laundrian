@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;  
 use Illuminate\Foundation\Auth\AuthenticatesUsers;  
 use Illuminate\Http\Request;  
-use App\Providers\RouteServiceProvider;  
-  
-class LoginController extends Controller  
+use App\Models\User;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Str;
+
+class RegisterController extends Controller  
 {  
     use AuthenticatesUsers;  
   
@@ -18,30 +23,11 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');  
     }  
   
-    public function showLoginForm()  
+    public function showRegistrationForm()  
     {  
-        return view('auth.page.index'); 
+        return view('laundry.auth.pages.register.index'); 
     }  
-  
-    public function login(Request $request)  
-    {  
-        $request->validate([  
-            'username' => 'required',  
-            'password' => 'required',  
-        ]);  
-  
-        $loginCredentials = [  
-            'username' => $request->username,  
-            'password' => $request->password  
-        ];  
-  
-        if (auth()->attempt($loginCredentials)) {  
-            return redirect()->intended($this->redirectTo);  
-        }  
-  
-        return back()->withErrors([  
-            'username' => 'The provided credentials do not match our records.',  
-        ]);  
-    }  
+
+    
 }  
 

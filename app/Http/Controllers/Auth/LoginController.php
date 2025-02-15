@@ -69,9 +69,16 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        // Redirect to the intended URL or default to '/dashboard'
-        return redirect()->intended('/admin/dashboard');
+        // Check if the user has the 'customer' role
+        if ($user->hasRole('customer')) {
+            // Redirect to the customer dashboard
+            return redirect()->intended('/customer/dashboard');
+        } else {
+            // Redirect to the admin dashboard for other roles
+            return redirect()->intended('/admin/dashboard');
+        }
     }
+
 
     /**  
      * Show the application's login form.  

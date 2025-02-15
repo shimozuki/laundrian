@@ -166,6 +166,17 @@
     </div>
 @endsection
 
+@section('css')
+<link rel="stylesheet" href="{{ asset('assets/vendor/choices/css/choices.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/flatpickr/css/flatpickr.min.css') }}" type="text/css">
+@endsection
+
+@section('js')
+<script src="{{ asset('assets/vendor/choices/js/choices.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/flatpickr/js/flatpickr.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endsection
+
 @section('script')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -294,7 +305,7 @@
         });
     </script>
 
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', function () {
             var invoice = @json(session('invoice'));
 
@@ -308,7 +319,7 @@
                 @endphp
             }
         });
-    </script>
+    </script> -->
 @endsection
 
 @section('modal')

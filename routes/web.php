@@ -148,6 +148,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/customer/profile/{username}', [CustomerProfileController::class, 'index'])->name('customer.profile');
         Route::put('/customer/profile/{username}', [CustomerProfileController::class, 'update'])->name('customer.profileUpdate');
 
+        Route::post('/customer/transaction', [CustomerTransactionController::class, 'store'])->name('customer.transactionStore');
+
         Route::get('/customer/transaction', [CustomerTransactionController::class, 'index'])->name('customer.transaction');
         Route::get('/customer/transaction/{invoice}/receipt', [CustomerTransactionController::class, 'transactionReceipt'])->name('customer.transactionReceipt');
         Route::get('/customer/coupon', [CustomerCouponController::class, 'index'])->name('customer.coupon');

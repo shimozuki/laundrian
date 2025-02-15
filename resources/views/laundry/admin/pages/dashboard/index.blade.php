@@ -87,20 +87,30 @@
 @endsection
 
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.3"></script>
 @endsection
 
 @section('script')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var transactions = @json($transactions);
+            var chartData = @json($chartData);
 
-            var seriesData = transactions.map(function(item) {
+            var seriesDataIncome = chartData.map(function(item) {
                 return {
                     x: new Date(item.year, item.month - 1),
                     y: item.total_price
                 };
             });
+
+            var seriesDataTransactions = chartData.map(function(item) {
+                return {
+                    x: new Date(item.year, item.month - 1),
+                    y: item.total_transactions
+                };
+            });
+
+            console.log(seriesDataIncome);
+            console.log(seriesDataTransactions);
 
             var options = {
                 chart: {
@@ -110,10 +120,16 @@
                         enabled: false
                     }
                 },
-                series: [{
-                    name: 'Total Pendapatan',
-                    data: seriesData
-                }],
+                series: [
+                    {
+                        name: 'Total Pendapatan',
+                        data: seriesDataIncome
+                    },
+                    {
+                        name: 'Total Transaksi',
+                        data: seriesDataTransactions
+                    }
+                ],
                 xaxis: {
                     type: 'datetime',
                     labels: {
@@ -132,11 +148,18 @@
                             return date.toLocaleString('id-ID', { month: 'short', year: 'numeric' });
                         }
                     },
-                    y: {
-                        formatter: function(val) {
-                            return 'IDR ' + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    y: [
+                        {
+                            formatter: function(val) {
+                                return 'IDR ' + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            }
+                        },
+                        {
+                            formatter: function(val) {
+                                return val + ' transaksi';
+                            }
                         }
-                    }
+                    ]
                 }
             };
 
@@ -145,3 +168,4 @@
         });
     </script>
 @endsection
+

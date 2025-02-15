@@ -9,10 +9,11 @@
         <div class="offcanvas-body sidebar-content d-flex flex-column pt-4">
             <ul class="navbar-nav flex-column" id="navbar-sidebar">
                 <li class="nav-item fw-normal small ms-2 my-2"> MENU </li>
-                <li class="nav-item"> <a href="{{ route('customer.dashboard') }}" class="nav-link @yield('active-home-dashboard')">BERANDA</a> </li>
+                <li class="nav-item"> <a href="{{ route('customer.dashboard') }}" class="nav-link @yield('active-home-dashboard')">DASHBOARD</a> </li>
                 <li class="nav-item fw-normal small ms-2 my-2"> DATA </li>
                 <li class="nav-item"> <a href="{{ route('customer.transaction') }}" class="nav-link @yield('active-data-transaction')">RIWAYAT TRANSAKSI</a> </li>
                 <li class="nav-item"> <a href="{{ route('customer.coupon') }}" class="nav-link @yield('active-data-coupon')">RIWAYAT KUPON</a> </li>
+                <li class="nav-item"> <a href="{{ route('chatify') }}" class="nav-link @yield('active-other-review')">PESAN</a> </li>
             </ul>
         </div>
     </div>

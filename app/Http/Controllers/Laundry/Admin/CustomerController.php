@@ -298,8 +298,8 @@ class CustomerController extends Controller
             }
 
             $nameParts = explode(' ', $request->name);
-            $username = Str::slug($nameParts[0]) . rand(0, 999);
-            $password = Str::slug($nameParts[0]) . rand(0, 999);
+            $username = $request->username;
+            $password = $request->password;
 
             $phone = $request->phone;
             if (substr($phone, 0, 1) !== '0') {

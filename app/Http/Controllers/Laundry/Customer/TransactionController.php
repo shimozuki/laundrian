@@ -46,7 +46,6 @@ class TransactionController extends Controller
         $customerId = Auth::id();
         $customername = Auth::user();
         $request->validate([
-            'customer_id' => 'required|exists:users,id',
             'package_id' => 'required|exists:packages,id',
             'coupon_id' => 'nullable|exists:coupons,id',
             'date' => 'required|date',
@@ -85,7 +84,7 @@ class TransactionController extends Controller
 
             TransactionDetail::create([
                 'transaction_id' => $transaction->id,
-                'customer_id' => $request->customer_id,
+                'customer_id' => $customerId,
                 'package_id' => $request->package_id,
                 'coupon_id' => $request->coupon_id,
                 'amount' => $request->amount ?? 0
@@ -137,8 +136,8 @@ class TransactionController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            // Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
-            // return redirect()->back();
+            Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
+            return redirect()->back();
         }
     }
 }

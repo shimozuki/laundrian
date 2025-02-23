@@ -185,6 +185,9 @@
             var couponSelectTransaction = document.getElementById('coupon_id_transaction');
             var weightInputTransaction = document.getElementById('weight_transaction');
             var amountInputTransaction = document.getElementById('amount_transaction');
+            var couponSelect = $('#coupon_id_transaction');
+            var customerId = '{{ Auth::user()->id }}';
+            console.log('id ku', customerId)
 
             weightInputTransaction.addEventListener('input', function (e) {
                 weightInputTransaction.value = weightInputTransaction.value.replace(/[^0-9.]/g, '');
@@ -275,11 +278,11 @@
         });
     </script>
 
-    <script>
+<script>
         $(document).ready(function() {
-            $('#customer_id').change(function() {
-                var customerId = $(this).val();
+                var customerId = '{{ Auth::user()->id }}';
                 var couponSelect = $('#coupon_id_transaction');
+                console.log('id kuu', customerId)
 
                 if (customerId) {
                     $.ajax({
@@ -301,7 +304,6 @@
                     couponSelect.empty();
                     couponSelect.append('<option value="">Silakan pilih salah satu</option>');
                 }
-            });
         });
     </script>
 
@@ -345,13 +347,6 @@
                                     </select>
                                 </div>
                                 <p class="text-danger small">{{ $errors->first('package_id') }}</p>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="date_transaction" class="fw-medium small h6">TANGGAL</label>
-                                <div class="form-border-bottom form-control-transparent">
-                                    <input type="text" name="date" id="date_transaction" class="form-control flatpickr" data-date-format="d F Y" placeholder="Pilih tanggal" required>
-                                </div>
-                                <p class="text-danger small">{{ $errors->first('date') }}</p>
                             </div>
                             <div class="col-md-4">
                                 <label for="weight_transaction" class="fw-medium small h6">BERAT</label>

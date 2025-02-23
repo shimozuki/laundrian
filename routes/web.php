@@ -149,6 +149,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/customer/profile/{username}', [CustomerProfileController::class, 'update'])->name('customer.profileUpdate');
 
         Route::post('/customer/transaction', [CustomerTransactionController::class, 'store'])->name('customer.transactionStore');
+        Route::get('/customer/transaction/{customer_id}', [CustomerTransactionController::class, 'getCoupons'])->name('getCoupons');
 
         Route::get('/customer/transaction', [CustomerTransactionController::class, 'index'])->name('customer.transaction');
         Route::get('/customer/transaction/{invoice}/receipt', [CustomerTransactionController::class, 'transactionReceipt'])->name('customer.transactionReceipt');
@@ -156,6 +157,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('/customer/review', [CustomerDashboardController::class, 'reviewStore'])->name('customer.reviewStore');
         Route::get('customer/review/load-more', [CustomerDashboardController::class, 'reviewLoadMore'])->name('customer.reviewLoadMore');
+        // Route::post('/admin/transaction', [AdminTransactionController::class, 'store'])->name('customer.transactionStore');
+        
     });
 });
 

@@ -387,6 +387,7 @@
             $('#customer_id').change(function() {
                 var customerId = $(this).val();
                 var couponSelect = $('#coupon_id_transaction');
+                console.log('id ku', customerId)
 
                 if (customerId) {
                     $.ajax({
@@ -466,13 +467,6 @@
                                 <p class="text-danger small">{{ $errors->first('package_id') }}</p>
                             </div>
                             <div class="col-md-4">
-                                <label for="date_transaction" class="fw-medium small h6">TANGGAL</label>
-                                <div class="form-border-bottom form-control-transparent">
-                                    <input type="text" name="date" id="date_transaction" class="form-control flatpickr" data-date-format="d F Y" placeholder="Pilih tanggal" required>
-                                </div>
-                                <p class="text-danger small">{{ $errors->first('date') }}</p>
-                            </div>
-                            <div class="col-md-4">
                                 <label for="weight_transaction" class="fw-medium small h6">BERAT</label>
                                 <div class="form-border-bottom form-control-transparent position-relative">
                                     <input type="text" name="weight" id="weight_transaction" maxlength="3" class="form-control" required>
@@ -489,7 +483,7 @@
                                 </div>
                                 <p class="text-danger small">{{ $errors->first('package_id') }}</p>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="price_transaction" class="fw-medium small h6">HARGA</label>
                                 <div class="form-border-bottom form-control-transparent position-relative">
                                     <input type="text" name="price" id="price_transaction" class="form-control ms-3" maxlength="7" required readonly>

@@ -48,7 +48,6 @@ class TransactionController extends Controller
         $request->validate([
             'package_id' => 'required|exists:packages,id',
             'coupon_id' => 'nullable|exists:coupons,id',
-            'date' => 'required|date',
             'weight' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:0',
             'amount' => 'nullable|numeric|min:0'
@@ -64,8 +63,8 @@ class TransactionController extends Controller
 
             $package = Package::findOrFail($request->package_id);
 
-            $date = Carbon::parse($request->date)->format('d F Y');
-            $day = Carbon::parse($request->date)->format('l');
+            $date = Carbon::now()->format('d F Y');
+            $day = Carbon::now()->format('l');
 
             $couponValue = $request->filled('coupon_id') ? 'used' : 'not used';
 
@@ -139,5 +138,50 @@ class TransactionController extends Controller
             Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
             return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
+    }
+
+    public function getCoupons($customer_id)
+    {
+        $coupons = Coupon::where('customer_id', $customer_id)
+            ->where('status', '=', 'not used')
+            ->where('amount', '=', 10)
+            ->get(['id', 'amount']);
+
+        return response()->json($coupons);
+    }
+
+    private function sendMessage($phone, $message)
+    {
+        $token = "yMo#effLUy4Vz3ZdVmgY";
+        $curl = curl_init();
+
+        $postData = json_encode([
+            'target' => $phone,
+            'message' => $message,
+            'countryCode' => '62'
+        ]);
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $postData,
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: $token",
+                "Content-Type: application/json"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        if ($response === false) {
+            throw new \Exception(curl_error($curl));
+        }
+
+        curl_close($curl);
     }
 }

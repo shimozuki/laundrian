@@ -55,7 +55,6 @@ class TransactionController extends Controller
             'customer_id' => 'required|exists:users,id',
             'package_id' => 'required|exists:packages,id',
             'coupon_id' => 'nullable|exists:coupons,id',
-            'date' => 'required|date',
             'weight' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:0',
             'amount' => 'nullable|numeric|min:0'
@@ -63,6 +62,7 @@ class TransactionController extends Controller
 
         try {
             DB::beginTransaction();
+            Carbon::setLocale('id');
 
             $lastTransaction = Transaction::orderBy('id', 'DESC')->first();
             $lastInvoiceNumber = $lastTransaction ? intval(substr($lastTransaction->invoice, 4)) : 0;
@@ -72,8 +72,8 @@ class TransactionController extends Controller
             $customer = User::findOrFail($request->customer_id);
             $package = Package::findOrFail($request->package_id);
 
-            $date = Carbon::parse($request->date)->format('d F Y');
-            $day = Carbon::parse($request->date)->format('l');
+            $date = Carbon::now()->format('d F Y');
+            $day = Carbon::now()->format('l');
 
             $couponValue = $request->filled('coupon_id') ? 'used' : 'not used';
 
@@ -138,129 +138,131 @@ class TransactionController extends Controller
             $this->sendMessage($customer->phone, $message1);
 
             DB::commit();
+            \Log::info($request->all());
 
             session()->flash('invoice', $transaction->invoice);
             Alert::toast('<span class="toast-information">Transaksi berhasil dibuat</span>')->hideCloseButton()->padding('25px')->toHtml();
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
+            \Log::error('Transaction creation error: ' . $e->getMessage());
             Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
             return redirect()->back();
         }
     }
 
-    public function storeCustomer(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string',
-            'gender' => 'required|string',
-            'phone' => 'required|numeric',
-            'address' => 'required|string',
-            'package_id' => 'required|exists:packages,id',
-            'date' => 'required|date',
-            'weight' => 'required|numeric|min:1',
-            'price' => 'required|numeric|min:0',
-            'amount' => 'nullable|numeric|min:0'
-        ]);
+    // public function storeCustomer(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string',
+    //         'gender' => 'required|string',
+    //         'phone' => 'required|numeric',
+    //         'address' => 'required|string',
+    //         'package_id' => 'required|exists:packages,id',
+    //         'date' => 'required|date',
+    //         'weight' => 'required|numeric|min:1',
+    //         'price' => 'required|numeric|min:0',
+    //         'amount' => 'nullable|numeric|min:0'
+    //     ]);
 
-        try {
-            DB::beginTransaction();
+    //     try {
+    //         DB::beginTransaction();
 
-            $lastTransaction = Transaction::orderBy('id', 'DESC')->first();
-            $lastInvoiceNumber = $lastTransaction ? intval(substr($lastTransaction->invoice, 4)) : 0;
-            $invoiceNumber = str_pad($lastInvoiceNumber + 1, 3, '0', STR_PAD_LEFT);
-            $invoice = 'TRC-' . $invoiceNumber;
+    //         $lastTransaction = Transaction::orderBy('id', 'DESC')->first();
+    //         $lastInvoiceNumber = $lastTransaction ? intval(substr($lastTransaction->invoice, 4)) : 0;
+    //         $invoiceNumber = str_pad($lastInvoiceNumber + 1, 3, '0', STR_PAD_LEFT);
+    //         $invoice = 'TRC-' . $invoiceNumber;
 
-            $package = Package::findOrFail($request->package_id);
+    //         $package = Package::findOrFail($request->package_id);
 
-            $date = Carbon::parse($request->date)->format('d F Y');
-            $day = Carbon::parse($request->date)->format('l');
+    //         $date = Carbon::parse($request->date)->format('d F Y');
+    //         $day = Carbon::parse($request->date)->format('l');
 
-            $nameParts = explode(' ', $request->name);
-            $username = Str::slug($nameParts[0]) . rand(0, 999);
-            $password = Str::slug($nameParts[0]) . rand(0, 999);
+    //         $nameParts = explode(' ', $request->name);
+    //         $username = Str::slug($nameParts[0]) . rand(0, 999);
+    //         $password = Str::slug($nameParts[0]) . rand(0, 999);
 
-            $customer = User::create([
-                'username' => $username,
-                'name' => $request->name,
-                'password' => Hash::make($password),
-                'gender' => $request->gender,
-                'phone' => $request->phone,
-                'address' => $request->address,
-                'status' => 'active'
-            ])->assignRole('customer');
+    //         $customer = User::create([
+    //             'username' => $username,
+    //             'name' => $request->name,
+    //             'password' => Hash::make($password),
+    //             'gender' => $request->gender,
+    //             'phone' => $request->phone,
+    //             'address' => $request->address,
+    //             'status' => 'active'
+    //         ])->assignRole('customer');
 
-            $transaction = Transaction::create([
-                'invoice' => $invoice,
-                'customer_name' => $customer->name,
-                'customer_phone' => $customer->phone,
-                'package' => $package->type,
-                'day' => $day,
-                'date' => $date,
-                'weight' => $request->weight,
-                'price' => $request->price,
-                'coupon' => 'not used',
-                'status' => 'pending'
-            ]);
+    //         $transaction = Transaction::create([
+    //             'invoice' => $invoice,
+    //             'customer_name' => $customer->name,
+    //             'customer_phone' => $customer->phone,
+    //             'package' => $package->type,
+    //             'day' => $day,
+    //             'date' => $date,
+    //             'weight' => $request->weight,
+    //             'price' => $request->price,
+    //             'coupon' => 'not used',
+    //             'status' => 'pending'
+    //         ]);
 
-            TransactionDetail::create([
-                'transaction_id' => $transaction->id,
-                'customer_id' => $customer->id,
-                'package_id' => $package->id,
-                'coupon_id' => 0,
-                'amount' => $request->amount,
-            ]);
+    //         TransactionDetail::create([
+    //             'transaction_id' => $transaction->id,
+    //             'customer_id' => $customer->id,
+    //             'package_id' => $package->id,
+    //             'coupon_id' => 0,
+    //             'amount' => $request->amount,
+    //         ]);
 
-            $coupon = Coupon::where('temporary', $customer->id)->where('amount', '<', 10)->where('status', 0)->first();
-            if ($coupon) {
-                $coupon->increment('amount');
-            } else {
-                Coupon::create([
-                    'customer_id' => $customer->id,
-                    'customer_name' => $customer->name,
-                    'customer_phone' => $customer->phone,
-                    'amount' => 1,
-                    'status' => 'not used',
-                    'temporary' => $customer->id
-                ]);
-            }
+    //         $coupon = Coupon::where('temporary', $customer->id)->where('amount', '<', 10)->where('status', 0)->first();
+    //         if ($coupon) {
+    //             $coupon->increment('amount');
+    //         } else {
+    //             Coupon::create([
+    //                 'customer_id' => $customer->id,
+    //                 'customer_name' => $customer->name,
+    //                 'customer_phone' => $customer->phone,
+    //                 'amount' => 1,
+    //                 'status' => 'not used',
+    //                 'temporary' => $customer->id
+    //             ]);
+    //         }
 
-            $totalPrice = $request->weight * $package->price;
-            $paidAmount = $request->amount ?? 0;
-            $remainingAmount = $totalPrice - $paidAmount;
+    //         $totalPrice = $request->weight * $package->price;
+    //         $paidAmount = $request->amount ?? 0;
+    //         $remainingAmount = $totalPrice - $paidAmount;
 
-            $message1 = "Halo " . strtoupper($request->name) . ", this is your Username and Password.\n";
-            $message1 .= "Username: $username\nPassword: $password\n\n";
-            $message1 .= "You can log in to our website at " . url('/');
+    //         $message1 = "Halo " . strtoupper($request->name) . ", this is your Username and Password.\n";
+    //         $message1 .= "Username: $username\nPassword: $password\n\n";
+    //         $message1 .= "You can log in to our website at " . url('/');
 
-            $message2 = "Halo {$customer->name}, transaksi Anda dengan nomor faktur {$invoice} telah berhasil dibuat.\n";
-            $message2 .= "Rincian transaksi:\n";
-            $message2 .= "- Paket: {$package->type}\n";
-            $message2 .= "- Tanggal: {$date} ({$day})\n";
-            $message2 .= "- Berat: {$request->weight} kg\n";
-            $message2 .= "- Total Harga: IDR " . number_format($totalPrice) . "\n";
+    //         $message2 = "Halo {$customer->name}, transaksi Anda dengan nomor faktur {$invoice} telah berhasil dibuat.\n";
+    //         $message2 .= "Rincian transaksi:\n";
+    //         $message2 .= "- Paket: {$package->type}\n";
+    //         $message2 .= "- Tanggal: {$date} ({$day})\n";
+    //         $message2 .= "- Berat: {$request->weight} kg\n";
+    //         $message2 .= "- Total Harga: IDR " . number_format($totalPrice) . "\n";
 
-            if ($paidAmount > 0) {
-                $message2 .= "- Jumlah yang dibayarkan: IDR " . number_format($paidAmount) . "\n";
-                $message2 .= "- Sisa yang harus dibayar: IDR " . number_format($remainingAmount) . "\n";
-            }
+    //         if ($paidAmount > 0) {
+    //             $message2 .= "- Jumlah yang dibayarkan: IDR " . number_format($paidAmount) . "\n";
+    //             $message2 .= "- Sisa yang harus dibayar: IDR " . number_format($remainingAmount) . "\n";
+    //         }
 
-            $message2 .= "Terima kasih telah menggunakan layanan kami.";
+    //         $message2 .= "Terima kasih telah menggunakan layanan kami.";
 
-            $this->sendMessage($request->phone, $message1);
-            $this->sendMessage($request->phone, $message2);
+    //         $this->sendMessage($request->phone, $message1);
+    //         $this->sendMessage($request->phone, $message2);
 
-            DB::commit();
+    //         DB::commit();
 
-            session()->flash('invoice', $transaction->invoice);
-            Alert::toast('<span class="toast-information">Transaksi berhasil dibuat</span>')->hideCloseButton()->padding('25px')->toHtml();
-            return redirect()->back();
-        } catch (\Exception $e) {
-            DB::rollback();
-            Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
-            return redirect()->back();
-        }
-    }
+    //         session()->flash('invoice', $transaction->invoice);
+    //         Alert::toast('<span class="toast-information">Transaksi berhasil dibuat</span>')->hideCloseButton()->padding('25px')->toHtml();
+    //         return redirect()->back();
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat transaksi: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
+    //         return redirect()->back();
+    //     }
+    // }
 
     public function processed($invoice)
     {

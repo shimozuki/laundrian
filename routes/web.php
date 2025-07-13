@@ -36,7 +36,7 @@ use App\Http\Controllers\Laundry\Auth\RegisterController;
 /* ROUTE */
 
 Auth::routes();
-Route::post('/processLogin', [LoginController::class, 'login'])->name('processLogin'); 
+Route::post('/processLogin', [LoginController::class, 'login'])->name('processLogin');
 Route::post('/processLogout', [LoginController::class, 'logout'])->name('processLogout');
 Route::post('/prosesregister', [AdminCustomerController::class, 'daftar'])->name('customerCreate');
 Route::post('/register', [RegisterController::class, 'showForm']);
@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/report/pdf/{dateRange}', [AdminReportController::class, 'pdf'])->name('admin.reportPDF');
 
         Route::get('/admin/coupon', [AdminCouponController::class, 'index'])->name('admin.coupon');
+        Route::post('/admin/coupon/store', [AdminCouponController::class, 'store'])->name('admin.couponStore');
         Route::post('/admin/receive/coupon/{id}', [AdminCouponController::class, 'receive'])->name('admin.couponReceive');
         Route::delete('/admin/coupon/{id}', [AdminCouponController::class, 'destroy'])->name('admin.couponDestroy');
 
@@ -158,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/customer/review', [CustomerDashboardController::class, 'reviewStore'])->name('customer.reviewStore');
         Route::get('customer/review/load-more', [CustomerDashboardController::class, 'reviewLoadMore'])->name('customer.reviewLoadMore');
         // Route::post('/admin/transaction', [AdminTransactionController::class, 'store'])->name('customer.transactionStore');
-        
+
     });
 });
 

@@ -19,7 +19,7 @@ class CouponController extends Controller
         $status = $request->status;
 
         if (!empty($searchQuery)) {
-            $query->where(function($q) use ($searchQuery) {
+            $query->where(function ($q) use ($searchQuery) {
                 $q->where('customer_name', 'LIKE', '%' . $searchQuery . '%')
                     ->orWhere('customer_phone', 'LIKE', '%' . $searchQuery . '%')
                     ->orWhere('amount', 'LIKE', '%' . $searchQuery . '%');
@@ -59,6 +59,28 @@ class CouponController extends Controller
             Alert::toast('<span class="toast-information">Terjadi kesalahan saat menerima kupon: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
             return redirect()->back();
         }
+    }
+
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'customer_name'  => 'required|string|max:30',
+            'customer_phone' => 'required|string|max:15',
+            'amount'         => 'required|integer|min:1',
+            'status'         => 'required|in:used,not used',
+        ]);
+
+        // Simpan data kupon
+        Coupon::create([
+            'customer_id'    => auth()->id(), // atau ganti sesuai relasi kamu
+            'customer_name'  => $request->customer_name,
+            'customer_phone' => $request->customer_phone,
+            'amount'         => $request->amount,
+            'status'         => $request->status,
+        ]);
+
+        return redirect()->route('admin.coupon')->with('success', 'Kupon berhasil ditambahkan.');
     }
 
     public function destroy(string $id)

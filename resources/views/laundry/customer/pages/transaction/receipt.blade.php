@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,6 +12,7 @@
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon/icon.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ asset('assets/css/receipt.css') }}">
 </head>
+
 <body>
     <div class="tm_container">
         <div class="tm_pos_invoice_wrap" id="tm_download_section">
@@ -54,15 +56,15 @@
                     </thead>
                     <tbody>
                         @foreach($transaction->details as $index => $row)
-                            @php
-                                $pricePerKg = $row->package->price;
-                                $totalPrice = $pricePerKg * $transaction->weight;
-                            @endphp
-                            <tr>
-                                <td>{{ $row->package->type }}</td>
-                                <td>{{ $transaction->weight }} kg</td>
-                                <td>IDR {{ number_format($pricePerKg * $transaction->weight) }}</td>
-                            </tr>
+                        @php
+                        $pricePerKg = $row->package->price;
+                        $totalPrice = $pricePerKg * $transaction->weight;
+                        @endphp
+                        <tr>
+                            <td>{{ $row->package->type }}</td>
+                            <td>{{ $transaction->weight }} kg</td>
+                            <td>Rp. {{ number_format($pricePerKg * $transaction->weight) }}</td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -71,18 +73,18 @@
                         <div class="tm_bill_title">Keseluruhan:</div>
                         <div class="tm_bill_value">
                             @php
-                                $totalPrice = $pricePerKg * $transaction->weight;
+                            $totalPrice = $pricePerKg * $transaction->weight;
                             @endphp
-                            IDR {{ number_format($totalPrice, 0) }}
+                            Rp. {{ number_format($totalPrice, 0) }}
                         </div>
                     </div>
                     <div class="tm_bill_list_in">
                         <div class="tm_bill_title">Kupon:</div>
                         <div class="tm_bill_value">
                             @php
-                                $couponDiscount = $transaction->coupon ? $pricePerKg : 0;
+                            $couponDiscount = $transaction->coupon ? $pricePerKg : 0;
                             @endphp
-                            IDR {{ number_format($couponDiscount, 0) }}
+                            Rp. {{ number_format($couponDiscount, 0) }}
                         </div>
                     </div>
                     <div class="tm_invoice_seperator"></div>
@@ -90,9 +92,9 @@
                         <div class="tm_bill_title tm_bill_focus">Total yang harus dibayar:</div>
                         <div class="tm_bill_value tm_bill_focus">
                             @php
-                                $totalPayable = $totalPrice - $couponDiscount;
+                            $totalPayable = $totalPrice - $couponDiscount;
                             @endphp
-                            IDR {{ number_format($totalPayable, 0) }}
+                            Rp. {{ number_format($totalPayable, 0) }}
                         </div>
                     </div>
                 </div>
@@ -132,4 +134,5 @@
         });
     </script>
 </body>
+
 </html>

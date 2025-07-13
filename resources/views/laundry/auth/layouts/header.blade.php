@@ -1,4 +1,4 @@
-<header class="navbar-light header-sticky">
+<!-- <header class="navbar-light header-sticky">
 	<nav class="navbar navbar-expand-xl border-bottom">
 		<div class="container-fluid px-lg-5 mt-1">
 			<a href="{{ url('/') }}" class="navbar-brand mx-auto">
@@ -7,4 +7,4 @@
             </a>
 		</div>
 	</nav>
-</header>
+</header> -->

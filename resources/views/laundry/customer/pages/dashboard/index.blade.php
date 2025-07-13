@@ -100,7 +100,7 @@
                                                 <td> <span class="fw-normal h6"></span> </td>
                                                 <td> <span class="fw-normal h6">{{ $row->type }}</span> </td>
                                                 <td> <span class="fw-normal h6"></span> </td>
-                                                <td> <span class="fw-normal h6">IDR {{ number_format($row->price) }}</span> </td>
+                                                <td> <span class="fw-normal h6">Rp. {{ number_format($row->price) }}</span> </td>
                                                 <td> <span class="fw-normal h6"></span> </td>
                                         </tr>
                                     @endforeach

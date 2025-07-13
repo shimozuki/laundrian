@@ -32,7 +32,7 @@ class TransactionController extends Controller
         $transaction = Transaction::orderBy('id', 'DESC')->with('detail');
 
         if (!empty($query)) {
-            $transaction = $transaction->where(function($q) use ($query) {
+            $transaction = $transaction->where(function ($q) use ($query) {
                 $q->where('invoice', 'LIKE', '%' . $query . '%')
                     ->orWhere('customer_name', 'LIKE', '%' . $query . '%')
                     ->orWhere('customer_phone', 'LIKE', '%' . $query . '%');
@@ -126,11 +126,11 @@ class TransactionController extends Controller
             $message1 .= "- Paket: {$package->type}\n";
             $message1 .= "- Tanggal: {$date} ({$day})\n";
             $message1 .= "- Berat: {$request->weight} kg\n";
-            $message1 .= "- Total Harga: IDR " . number_format($totalPrice) . "\n";
+            $message1 .= "- Total Harga: Rp. " . number_format($totalPrice) . "\n";
 
             if ($paidAmount > 0) {
-                $message1 .= "- Jumlah yang dibayarkan: IDR " . number_format($paidAmount) . "\n";
-                $message1 .= "- Sisa yang harus dibayar: IDR " . number_format($remainingAmount) . "\n";
+                $message1 .= "- Jumlah yang dibayarkan: Rp. " . number_format($paidAmount) . "\n";
+                $message1 .= "- Sisa yang harus dibayar: Rp. " . number_format($remainingAmount) . "\n";
             }
 
             $message1 .= "Terima kasih telah menggunakan layanan kami.";
@@ -240,11 +240,11 @@ class TransactionController extends Controller
     //         $message2 .= "- Paket: {$package->type}\n";
     //         $message2 .= "- Tanggal: {$date} ({$day})\n";
     //         $message2 .= "- Berat: {$request->weight} kg\n";
-    //         $message2 .= "- Total Harga: IDR " . number_format($totalPrice) . "\n";
+    //         $message2 .= "- Total Harga: Rp. " . number_format($totalPrice) . "\n";
 
     //         if ($paidAmount > 0) {
-    //             $message2 .= "- Jumlah yang dibayarkan: IDR " . number_format($paidAmount) . "\n";
-    //             $message2 .= "- Sisa yang harus dibayar: IDR " . number_format($remainingAmount) . "\n";
+    //             $message2 .= "- Jumlah yang dibayarkan: Rp. " . number_format($paidAmount) . "\n";
+    //             $message2 .= "- Sisa yang harus dibayar: Rp. " . number_format($remainingAmount) . "\n";
     //         }
 
     //         $message2 .= "Terima kasih telah menggunakan layanan kami.";
@@ -323,11 +323,11 @@ class TransactionController extends Controller
                 $message1 .= "- Paket: {$package->type}\n";
                 $message1 .= "- Tanggal: {$date} ({$day})\n";
                 $message1 .= "- Berat: {$transaction->weight} kg\n";
-                $message1 .= "- Total Harga: IDR " . number_format($totalPrice) . "\n";
+                $message1 .= "- Total Harga: Rp. " . number_format($totalPrice) . "\n";
 
                 if ($paidAmount > 0) {
-                    $message1 .= "- Jumlah yang dibayarkan: IDR " . number_format($paidAmount) . "\n";
-                    $message1 .= "- Sisa yang harus dibayar: IDR " . number_format($remainingAmount) . "\n";
+                    $message1 .= "- Jumlah yang dibayarkan: Rp. " . number_format($paidAmount) . "\n";
+                    $message1 .= "- Sisa yang harus dibayar: Rp. " . number_format($remainingAmount) . "\n";
                 }
 
                 $message1 .= "Terima kasih telah menggunakan layanan kami.";

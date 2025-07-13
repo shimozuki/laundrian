@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html class="no-js" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +13,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/report.css') }}">
 </head>
+
 <body>
     <div class="tm_container">
         <div class="tm_invoice_wrap">
@@ -43,19 +45,19 @@
                                     <tbody>
                                         @php $total = 0; @endphp
                                         @forelse ($transaction as $data)
-                                            @foreach ($data->details as $row)
-                                                <tr class="tm_table_baseline">
-                                                    <td class="tm_width_00 tm_primary_color">{{ $data->invoice }}</td>
-                                                    <td class="tm_width_000">
-                                                        {{ ucwords($row->customer->name) }} <br>
-                                                        {{ chunk_split($row->customer['phone'], 4) }}
-                                                    </td>
-                                                    <td class="tm_width_000">{{ ucwords($row->package->type) }}</td>
-                                                    <td class="tm_width_0">{{ $data->weight }} kg</td>
-                                                    <td class="tm_width_1 tm_text_right">IDR {{ number_format($data->price) }}</td>
-                                                </tr>
-                                                @php $total += $data->getTotalAttribute(); @endphp
-                                            @endforeach
+                                        @foreach ($data->details as $row)
+                                        <tr class="tm_table_baseline">
+                                            <td class="tm_width_00 tm_primary_color">{{ $data->invoice }}</td>
+                                            <td class="tm_width_000">
+                                                {{ ucwords($row->customer->name) }} <br>
+                                                {{ chunk_split($row->customer['phone'], 4) }}
+                                            </td>
+                                            <td class="tm_width_000">{{ ucwords($row->package->type) }}</td>
+                                            <td class="tm_width_0">{{ $data->weight }} kg</td>
+                                            <td class="tm_width_1 tm_text_right">Rp. {{ number_format($data->price) }}</td>
+                                        </tr>
+                                        @php $total += $data->getTotalAttribute(); @endphp
+                                        @endforeach
                                         @empty
                                         @endforelse
                                     </tbody>
@@ -69,7 +71,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">Total</td>
-                                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">IDR {{ number_format($total) }}</td>
+                                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">Rp. {{ number_format($total) }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -107,4 +109,5 @@
     <script src="{{ asset('assets/js/html2canvas.min.js') }}"></script>
     <script src="{{ asset('assets/js/main.js') }}"></script>
 </body>
+
 </html>

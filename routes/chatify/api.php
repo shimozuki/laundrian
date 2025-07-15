@@ -15,7 +15,7 @@ Route::post('/idInfo', 'MessagesController@idFetchData')->name('api.idInfo');
 /**
  * Send message route
  */
-Route::post('/sendMessage', 'MessagesController@send')->name('api.send.message');
+// Route::post('/sendMessage', 'MessagesController@send')->name('api.send.message');
 
 /**
  * Fetch messages
@@ -25,7 +25,7 @@ Route::post('/fetchMessages', 'MessagesController@fetch')->name('api.fetch.messa
 /**
  * Download attachments route to create a downloadable links
  */
-Route::get('/download/{fileName}', 'MessagesController@download')->name('api.'.config('chatify.attachments.download_route_name'));
+Route::get('/download/{fileName}', 'MessagesController@download')->name('api.' . config('chatify.attachments.download_route_name'));
 
 /**
  * Make messages as seen
@@ -71,5 +71,3 @@ Route::post('/updateSettings', 'MessagesController@updateSettings')->name('api.a
  * Set active status
  */
 Route::post('/setActiveStatus', 'MessagesController@setActiveStatus')->name('api.activeStatus.set');
-
-

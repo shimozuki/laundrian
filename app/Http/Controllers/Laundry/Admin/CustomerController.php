@@ -27,7 +27,7 @@ class CustomerController extends Controller
 
         $query = request()->q;
         if ($query != '') {
-            $customerQuery->where(function($q) use ($query) {
+            $customerQuery->where(function ($q) use ($query) {
                 $q->where('username', 'LIKE', '%' . $query . '%')
                     ->orWhere('name', 'LIKE', '%' . $query . '%')
                     ->orWhere('phone', 'LIKE', '%' . $query . '%')
@@ -96,7 +96,6 @@ class CustomerController extends Controller
             $message .= "Nama Pengguna: $username\nKata Sandi: $password\n\n";
             $message .= "Anda dapat masuk ke situs web kami di " . url('/');
 
-            $this->sendMessage($request->phone, $message);
 
             DB::commit();
 
@@ -154,7 +153,7 @@ class CustomerController extends Controller
             $filename = $customer->image;
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = Str::slug($request->name) . '-' . rand(0,99999) . '.' . $file->getClientOriginalExtension();
+                $filename = Str::slug($request->name) . '-' . rand(0, 99999) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/profiles', $filename);
 
                 if ($customer->image !== 'avatar.png') {
@@ -197,8 +196,6 @@ class CustomerController extends Controller
                     $message .= "Kata sandi tidak diubah\n\n";
                 }
                 $message .= "Anda dapat masuk ke situs web kami di " . url('/');
-
-                $this->sendMessage($request->phone, $message);
             }
 
             DB::commit();
@@ -242,95 +239,94 @@ class CustomerController extends Controller
         }
     }
 
-    private function sendMessage($phone, $message)
-    {
-        $token = "yMo#effLUy4Vz3ZdVmgY";
-        $curl = curl_init();
+    // private function sendMessage($phone, $message)
+    // {
+    //     $token = "yMo#effLUy4Vz3ZdVmgY";
+    //     $curl = curl_init();
 
-        $postData = json_encode([
-            'target' => $phone,
-            'message' => $message,
-            'countryCode' => '62',
-        ]);
+    //     $postData = json_encode([
+    //         'target' => $phone,
+    //         'message' => $message,
+    //         'countryCode' => '62',
+    //     ]);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.fonnte.com/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $postData,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: $token",
-                "Content-Type: application/json"
-            ),
-        ));
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://api.fonnte.com/send',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 30,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'POST',
+    //         CURLOPT_POSTFIELDS => $postData,
+    //         CURLOPT_HTTPHEADER => array(
+    //             "Authorization: $token",
+    //             "Content-Type: application/json"
+    //         ),
+    //     ));
 
-        $response = curl_exec($curl);
+    //     $response = curl_exec($curl);
 
-        if ($response === false) {
-            throw new \Exception(curl_error($curl));
-        }
+    //     if ($response === false) {
+    //         throw new \Exception(curl_error($curl));
+    //     }
 
-        curl_close($curl);
-    }
+    //     curl_close($curl);
+    // }
 
-    public function daftar(Request $request, User $customer)
-    {
-        $request->validate([
-            'name' => 'required|string',
-            'image' => 'nullable|image|mimes:png,jpeg,jpg,gif,webp|max:5000',
-            'gender' => 'required|string',
-            'phone' => 'required|numeric',
-            'address' => 'required|string'
-        ]);
+    // public function daftar(Request $request, User $customer)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string',
+    //         'image' => 'nullable|image|mimes:png,jpeg,jpg,gif,webp|max:5000',
+    //         'gender' => 'required|string',
+    //         'phone' => 'required|numeric',
+    //         'address' => 'required|string'
+    //     ]);
 
-        try {
-            DB::beginTransaction();
+    //     try {
+    //         DB::beginTransaction();
 
-            $filename = 'avatar.png';
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $filename = Str::slug($request->name) . '-' . rand(0, 99999) . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/profiles', $filename);
-            }
+    //         $filename = 'avatar.png';
+    //         if ($request->hasFile('image')) {
+    //             $file = $request->file('image');
+    //             $filename = Str::slug($request->name) . '-' . rand(0, 99999) . '.' . $file->getClientOriginalExtension();
+    //             $file->storeAs('public/profiles', $filename);
+    //         }
 
-            $nameParts = explode(' ', $request->name);
-            $username = $request->username;
-            $password = $request->password;
+    //         $nameParts = explode(' ', $request->name);
+    //         $username = $request->username;
+    //         $password = $request->password;
 
-            $phone = $request->phone;
-            if (substr($phone, 0, 1) !== '0') {
-                $phone = '0' . $phone;
-            }
+    //         $phone = $request->phone;
+    //         if (substr($phone, 0, 1) !== '0') {
+    //             $phone = '0' . $phone;
+    //         }
 
-            $customer->create([
-                'username' => $username,
-                'name' => $request->name,
-                'password' => Hash::make($password),
-                'image' => $filename,
-                'gender' => $request->gender,
-                'phone' => $phone,
-                'address' => $request->address,
-                'status' => 1
-            ])->assignRole('customer');
+    //         $customer->create([
+    //             'username' => $username,
+    //             'name' => $request->name,
+    //             'password' => Hash::make($password),
+    //             'image' => $filename,
+    //             'gender' => $request->gender,
+    //             'phone' => $phone,
+    //             'address' => $request->address,
+    //             'status' => 1
+    //         ])->assignRole('customer');
 
-            $message = "Halo " . strtoupper($request->name) . ", ini adalah Nama Pengguna dan Kata Sandi Anda.\n";
-            $message .= "Nama Pengguna: $username\nKata Sandi: $password\n\n";
-            $message .= "Anda dapat masuk ke situs web kami di " . url('/');
+    //         $message = "Halo " . strtoupper($request->name) . ", ini adalah Nama Pengguna dan Kata Sandi Anda.\n";
+    //         $message .= "Nama Pengguna: $username\nKata Sandi: $password\n\n";
+    //         $message .= "Anda dapat masuk ke situs web kami di " . url('/');
 
-            $this->sendMessage($request->phone, $message);
 
-            DB::commit();
+    //         DB::commit();
 
-            Alert::toast('<span class="toast-information">Pelanggan berhasil dibuat</span>')->hideCloseButton()->padding('25px')->toHtml();
-            return redirect()->route('login');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat pelanggan: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
-            return redirect()->back();
-        }
-    }
+    //         Alert::toast('<span class="toast-information">Pelanggan berhasil dibuat</span>')->hideCloseButton()->padding('25px')->toHtml();
+    //         return redirect()->route('login');
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         Alert::toast('<span class="toast-information">Terjadi kesalahan saat membuat pelanggan: ' . $e->getMessage() . '</span>')->hideCloseButton()->padding('25px')->toHtml();
+    //         return redirect()->back();
+    //     }
+    // }
 }

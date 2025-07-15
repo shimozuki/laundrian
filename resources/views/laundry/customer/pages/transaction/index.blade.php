@@ -381,7 +381,26 @@
                             </div>
                             <p class="text-danger small">{{ $errors->first('amount') }}</p>
                         </div>
-                    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <button type="button" class="btn btn-outline-dark rounded-0 w-100 mb-3" id="showQrisBtn">
+        <i class="fa-solid fa-qrcode me-1"></i> Tampilkan QRIS
+    </button>
+    
+    <div class="w-50 ms-2">
+        <input type="file" name="proof" id="proof" accept="image/*,application/pdf" class="form-control" required>
+        <small class="text-muted">Upload bukti transfer</small>
+    </div>
+</div>
+
+<!-- QRIS Preview -->
+<div class="col-12">
+    <!-- QRIS Preview -->
+    <div id="qrisImageContainer" class="text-center mb-3" style="display: none;">
+        <img src="{{ asset('Usaha.jpeg') }}" alt="QRIS" class="img-fluid" style="max-width: 200px;">
+        <p class="text-muted small mt-2">Silakan scan QRIS di atas dan unggah bukti pembayaran.</p>
+    </div>
+</div>
+                  </div>
                     <div class="d-flex justify-content-center align-items-center mb-0">
                         <button type="button" class="btn btn-secondary w-50 rounded-0 mb-0 me-3" data-bs-dismiss="modal" aria-label="Close">TUTUP</button>
                         <button type="submit" class="btn btn-dark w-50 rounded-0 mb-0">LANJUTKAN</button>
@@ -518,6 +537,23 @@
         });
 
         $('#exportpdf').attr('href', '/customer/transaction/pdf/' + formatDateForLink(start) + '+' + formatDateForLink(end));
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const qrisBtn = document.getElementById('showQrisBtn');
+        const qrisImage = document.getElementById('qrisImageContainer');
+
+        if (!qrisBtn || !qrisImage) {
+            console.error("❌ Tombol atau container QRIS tidak ditemukan di DOM!");
+            return;
+        }
+
+        qrisBtn.addEventListener('click', function () {
+            console.log("✅ Tombol QRIS diklik!");
+            const isHidden = qrisImage.style.display === "none" || qrisImage.style.display === "";
+            qrisImage.style.display = isHidden ? "block" : "none";
+        });
     });
 </script>
 @endsection

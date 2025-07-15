@@ -135,7 +135,7 @@ class TransactionController extends Controller
 
             $message1 .= "Terima kasih telah menggunakan layanan kami.";
 
-            $this->sendMessage($customer->phone, $message1);
+
 
             DB::commit();
             \Log::info($request->all());
@@ -331,8 +331,6 @@ class TransactionController extends Controller
                 }
 
                 $message1 .= "Terima kasih telah menggunakan layanan kami.";
-
-                $this->sendMessage($customer->phone, $message1);
             }
 
             DB::commit();

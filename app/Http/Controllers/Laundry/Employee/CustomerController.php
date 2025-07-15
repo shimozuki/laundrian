@@ -27,7 +27,7 @@ class CustomerController extends Controller
 
         $query = request()->q;
         if ($query != '') {
-            $customerQuery->where(function($q) use ($query) {
+            $customerQuery->where(function ($q) use ($query) {
                 $q->where('username', 'LIKE', '%' . $query . '%')
                     ->orWhere('name', 'LIKE', '%' . $query . '%')
                     ->orWhere('phone', 'LIKE', '%' . $query . '%')
@@ -96,7 +96,7 @@ class CustomerController extends Controller
             $message .= "Nama Pengguna: $username\nKata Sandi: $password\n\n";
             $message .= "Anda dapat masuk ke situs web kami di " . url('/');
 
-            $this->sendMessage($request->phone, $message);
+
 
             DB::commit();
 
@@ -154,7 +154,7 @@ class CustomerController extends Controller
             $filename = $customer->image;
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = Str::slug($request->name) . '-' . rand(0,99999) . '.' . $file->getClientOriginalExtension();
+                $filename = Str::slug($request->name) . '-' . rand(0, 99999) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/profiles', $filename);
 
                 if ($customer->image !== 'avatar.png') {
@@ -197,8 +197,6 @@ class CustomerController extends Controller
                     $message .= "Kata sandi tidak diubah\n\n";
                 }
                 $message .= "Anda dapat masuk ke situs web kami di " . url('/');
-
-                $this->sendMessage($request->phone, $message);
             }
 
             DB::commit();

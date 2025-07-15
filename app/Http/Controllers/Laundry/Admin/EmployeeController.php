@@ -25,7 +25,7 @@ class EmployeeController extends Controller
 
         $query = request()->q;
         if ($query != '') {
-            $employeeQuery->where(function($q) use ($query) {
+            $employeeQuery->where(function ($q) use ($query) {
                 $q->where('username', 'LIKE', '%' . $query . '%')
                     ->orWhere('name', 'LIKE', '%' . $query . '%')
                     ->orWhere('phone', 'LIKE', '%' . $query . '%')
@@ -94,7 +94,7 @@ class EmployeeController extends Controller
             $message .= "Nama Pengguna: $username\nKata Sandi: $password\n\n";
             $message .= "Anda dapat masuk ke situs web kami di " . url('/');
 
-            $this->sendMessage($request->phone, $message);
+
 
             DB::commit();
 
@@ -152,7 +152,7 @@ class EmployeeController extends Controller
             $filename = $employee->image;
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
-                $filename = Str::slug($request->name) . '-' . rand(0,99999) . '.' . $file->getClientOriginalExtension();
+                $filename = Str::slug($request->name) . '-' . rand(0, 99999) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/profiles', $filename);
 
                 if ($employee->image !== 'avatar.png') {
@@ -195,8 +195,6 @@ class EmployeeController extends Controller
                     $message .= "Kata sandi tidak diubah\n\n";
                 }
                 $message .= "Anda dapat masuk ke situs web kami di " . url('/');
-
-                $this->sendMessage($request->phone, $message);
             }
 
             DB::commit();
@@ -236,38 +234,38 @@ class EmployeeController extends Controller
         }
     }
 
-    private function sendMessage($phone, $message)
-    {
-        $token = "yMo#effLUy4Vz3ZdVmgY";
-        $curl = curl_init();
+    // private function sendMessage($phone, $message)
+    // {
+    //     $token = "yMo#effLUy4Vz3ZdVmgY";
+    //     $curl = curl_init();
 
-        $postData = json_encode([
-            'target' => $phone,
-            'message' => $message,
-            'countryCode' => '62',
-        ]);
+    //     $postData = json_encode([
+    //         'target' => $phone,
+    //         'message' => $message,
+    //         'countryCode' => '62',
+    //     ]);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.fonnte.com/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $postData,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: $token",
-                "Content-Type: application/json"
-            ),
-        ));
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://api.fonnte.com/send',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 30,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'POST',
+    //         CURLOPT_POSTFIELDS => $postData,
+    //         CURLOPT_HTTPHEADER => array(
+    //             "Authorization: $token",
+    //             "Content-Type: application/json"
+    //         ),
+    //     ));
 
-        $response = curl_exec($curl);
+    //     $response = curl_exec($curl);
 
-        if ($response === false) {
-            throw new \Exception(curl_error($curl));
-        }
+    //     if ($response === false) {
+    //         throw new \Exception(curl_error($curl));
+    //     }
 
-        curl_close($curl);
-    }
+    //     curl_close($curl);
+    // }
 }

@@ -126,7 +126,6 @@ class TransactionController extends Controller
 
             $message1 .= "Terima kasih telah menggunakan layanan kami.";
 
-            $this->sendMessage($customername->phone, $message1);
 
             DB::commit();
 
@@ -150,38 +149,38 @@ class TransactionController extends Controller
         return response()->json($coupons);
     }
 
-    private function sendMessage($phone, $message)
-    {
-        $token = "yMo#effLUy4Vz3ZdVmgY";
-        $curl = curl_init();
+    // private function sendMessage($phone, $message)
+    // {
+    //     $token = "yMo#effLUy4Vz3ZdVmgY";
+    //     $curl = curl_init();
 
-        $postData = json_encode([
-            'target' => $phone,
-            'message' => $message,
-            'countryCode' => '62'
-        ]);
+    //     $postData = json_encode([
+    //         'target' => $phone,
+    //         'message' => $message,
+    //         'countryCode' => '62'
+    //     ]);
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.fonnte.com/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $postData,
-            CURLOPT_HTTPHEADER => array(
-                "Authorization: $token",
-                "Content-Type: application/json"
-            ),
-        ));
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://api.fonnte.com/send',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 30,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'POST',
+    //         CURLOPT_POSTFIELDS => $postData,
+    //         CURLOPT_HTTPHEADER => array(
+    //             "Authorization: $token",
+    //             "Content-Type: application/json"
+    //         ),
+    //     ));
 
-        $response = curl_exec($curl);
+    //     $response = curl_exec($curl);
 
-        if ($response === false) {
-            throw new \Exception(curl_error($curl));
-        }
+    //     if ($response === false) {
+    //         throw new \Exception(curl_error($curl));
+    //     }
 
-        curl_close($curl);
-    }
+    //     curl_close($curl);
+    // }
 }

@@ -161,6 +161,8 @@ Route::middleware(['auth'])->group(function () {
         // Route::post('/admin/transaction', [AdminTransactionController::class, 'store'])->name('customer.transactionStore');
 
     });
+
+    Route::post('/transaksi/upload-bukti/{id}', [CustomerTransactionController::class, 'uploadBukti'])->name('upload.bukti');
 });
 
 /* ROUTE */

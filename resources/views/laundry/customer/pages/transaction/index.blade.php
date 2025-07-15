@@ -3,6 +3,11 @@
 @section('active-data-transaction', 'active')
 
 @section('content')
+<style>
+#qrisModal {
+  display: flex !important;
+}
+</style>
 <div class="row">
     <div class="col-12 mb-4 mb-sm-5">
         <div class="d-flex justify-content-between align-items-center">
@@ -306,6 +311,26 @@
         }
     });
 </script>
+<script>
+    // Event listener khusus ketika modal #transactionModal selesai ditampilkan
+    $('#transactionModal').on('shown.bs.modal', function () {
+        const showQrisBtn = document.getElementById('showQrisBtn');
+        const qrisModal = document.getElementById('qrisModal');
+        const closeQrisBtn = document.getElementById('closeQrisBtn');
+
+        if (showQrisBtn && qrisModal && closeQrisBtn) {
+            showQrisBtn.addEventListener('click', function () {
+                qrisModal.style.display = 'flex';
+            });
+
+            closeQrisBtn.addEventListener('click', function () {
+                qrisModal.style.setProperty("display", "none", "important");
+            });
+        } else {
+            console.error("Element QRIS modal/tombol tidak ditemukan!");
+        }
+    });
+</script>
 
 <!-- <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -387,7 +412,7 @@
     </button>
     
     <div class="w-50 ms-2">
-        <input type="file" name="proof" id="proof" accept="image/*,application/pdf" class="form-control" required>
+        <input type="file" name="payment_proof" id="proof" accept="image/*,application/pdf" class="form-control" required>
         <small class="text-muted">Upload bukti transfer</small>
     </div>
 </div>
@@ -507,6 +532,13 @@
         </div>
     </div>
 </div>
+<div id="qrisModal" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex justify-content-center align-items-center" style="display: none !important; z-index: 9999;">
+    <div class="bg-white p-4 rounded shadow" style="max-width: 300px; width: 100%;">
+        <img src="{{ asset('Usaha.jpeg') }}" alt="QRIS" class="img-fluid mb-3">
+        <p class="text-muted text-center small">Silakan scan QRIS di atas dan unggah bukti pembayaran.</p>
+        <button class="btn btn-secondary w-100" id="closeQrisBtn">Tutup</button>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -539,21 +571,5 @@
         $('#exportpdf').attr('href', '/customer/transaction/pdf/' + formatDateForLink(start) + '+' + formatDateForLink(end));
     });
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const qrisBtn = document.getElementById('showQrisBtn');
-        const qrisImage = document.getElementById('qrisImageContainer');
 
-        if (!qrisBtn || !qrisImage) {
-            console.error("❌ Tombol atau container QRIS tidak ditemukan di DOM!");
-            return;
-        }
-
-        qrisBtn.addEventListener('click', function () {
-            console.log("✅ Tombol QRIS diklik!");
-            const isHidden = qrisImage.style.display === "none" || qrisImage.style.display === "";
-            qrisImage.style.display = isHidden ? "block" : "none";
-        });
-    });
-</script>
 @endsection

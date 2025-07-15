@@ -45,12 +45,14 @@ class TransactionController extends Controller
     {
         $customerId = Auth::id();
         $customername = Auth::user();
+
         $request->validate([
             'package_id' => 'required|exists:packages,id',
             'coupon_id' => 'nullable|exists:coupons,id',
             'weight' => 'required|numeric|min:1',
             'price' => 'required|numeric|min:0',
-            'amount' => 'nullable|numeric|min:0'
+            'amount' => 'nullable|numeric|min:0',
+            'payment_proof' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048' // <- tambah validasi file
         ]);
 
         try {
@@ -81,12 +83,28 @@ class TransactionController extends Controller
                 'status' => 'pending'
             ]);
 
-            TransactionDetail::create([
-                'transaction_id' => $transaction->id,
-                'customer_id' => $customerId,
-                'package_id' => $request->package_id,
-                'coupon_id' => $request->coupon_id,
-                'amount' => $request->amount ?? 0
+            // ==== Upload Bukti Pembayaran ====
+            $proofPath = null;
+            if ($request->hasFile('proof')) {
+                $file = $request->file('proof');
+                $filename = 'proof_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('proof', $filename, 'public');
+            } else {
+                $filePath = null;
+            }
+
+            $transaction = Transaction::create([
+                'invoice' => $invoice,
+                'customer_name' => $customername->name,
+                'customer_phone' => $customername->phone,
+                'package' => $package->type,
+                'day' => $day,
+                'date' => $date,
+                'weight' => $request->weight,
+                'price' => $request->price,
+                'coupon' => $couponValue,
+                'status' => 'pending',
+                'payment_proof' => $filePath, // ✅ Simpan di tabel transactions
             ]);
 
             if ($request->filled('coupon_id')) {
@@ -125,7 +143,6 @@ class TransactionController extends Controller
             }
 
             $message1 .= "Terima kasih telah menggunakan layanan kami.";
-
 
             DB::commit();
 
